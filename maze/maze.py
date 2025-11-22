@@ -14,11 +14,20 @@ for i in range(GRID_SIZE * GRID_SIZE):
     grid <= cell
     cells.append(cell)
 
+# Keep track of visited cells
+visited = set()
+visited.add((x, y))
+
 def update_highlight():
-    for cell in cells:
-        cell.attrs["class"] = "cell"
-    index = y * GRID_SIZE + x
-    cells[index].attrs["class"] = "cell active"
+    for i, cell in enumerate(cells):
+        row = i // GRID_SIZE
+        col = i % GRID_SIZE
+        if (col, row) == (x, y):
+            cell.attrs["class"] = "cell active"
+        elif (col, row) in visited:
+            cell.attrs["class"] = "cell visited"
+        else:
+            cell.attrs["class"] = "cell"
 
 update_highlight()
 
@@ -34,4 +43,6 @@ def move_square(event):
         x -= 1
     elif key == "ArrowRight" and x < GRID_SIZE - 1:
         x += 1
+
+    visited.add((x, y))
     update_highlight()
